@@ -5,6 +5,7 @@ tqdm
 tensorboard
 matplotlib
 ctcdecode
+wandb
 
 pandas
 speechbrain~=0.5.9

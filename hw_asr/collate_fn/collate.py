@@ -30,7 +30,8 @@ def collate_fn(dataset_items: List[dict]):
         result_batch['text'].append(CharTextEncoder.normalize_text(item['text']))
 
     result_batch['text_encoded'] = pad_sequence(result_batch['text_encoded'], batch_first=True)
-    result_batch['text_encoded_length'] = torch.Tensor(result_batch['text_encoded_length'])
+    result_batch['text_encoded_length'] = torch.tensor(result_batch['text_encoded_length'])
     result_batch['spectrogram'] = pad_sequence(result_batch['spectrogram'], batch_first=True)
+    result_batch['spectrogram_length'] = torch.tensor(result_batch['spectrogram_length'])
 
     return result_batch

@@ -24,7 +24,7 @@ class CTCCharTextEncoder(CharTextEncoder):
         res = ""
         for ind in inds:
             if ind:
-                res += self.ind2char[ind]
+                res += self.ind2char[int(ind)]
         return res
 
     def ctc_beam_search(self, probs: torch.tensor, beam_size: int = 100) -> List[Tuple[str, float]]:
