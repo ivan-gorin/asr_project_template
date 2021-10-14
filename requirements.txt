@@ -3,6 +3,8 @@ torchvision
 numpy
 tqdm
 tensorboard
+matplotlib
+ctcdecode
 
 pandas
 speechbrain~=0.5.9
