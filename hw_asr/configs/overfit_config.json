@@ -17,7 +17,8 @@
     "type": "BaselineGRU",
     "args": {
       "n_feats": 128,
-      "fc_hidden": 512
+      "fc_hidden": 512,
+      "dropout": 0.1
     }
   },
   "data": {
@@ -79,7 +80,7 @@
     "early_stop": 100,
     "visualize": "wandb",
     "wandb_project": "asr_project",
-    "len_epoch": 20,
+    "len_epoch": 30,
     "grad_norm_clip": 10
   }
 }
