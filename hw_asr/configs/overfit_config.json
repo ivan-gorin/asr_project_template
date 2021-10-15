@@ -14,7 +14,7 @@
     "spectrogram": []
   },
   "arch": {
-    "type": "BaselineModel",
+    "type": "BaselineGRU",
     "args": {
       "n_feats": 128,
       "fc_hidden": 512
@@ -22,7 +22,7 @@
   },
   "data": {
     "train": {
-      "batch_size": 10,
+      "batch_size": 20,
       "num_workers": 5,
       "datasets": [
         {
@@ -79,7 +79,7 @@
     "early_stop": 100,
     "visualize": "wandb",
     "wandb_project": "asr_project",
-    "len_epoch": 30,
+    "len_epoch": 20,
     "grad_norm_clip": 10
   }
 }
