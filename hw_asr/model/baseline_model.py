@@ -30,13 +30,9 @@ class BaselineGRU(BaseModel):
                           batch_first=True, dropout=dropout)
         self.net = Sequential(
             nn.ReLU(),
-            nn.Linear(in_features=fc_hidden, out_features=fc_hidden),
-            nn.ReLU(),
             nn.Linear(in_features=fc_hidden, out_features=fc_hidden // 2),
             nn.ReLU(),
-            nn.Linear(in_features=fc_hidden // 2, out_features=fc_hidden // 4),
-            nn.ReLU(),
-            nn.Linear(in_features=fc_hidden // 4, out_features=n_class)
+            nn.Linear(in_features=fc_hidden // 2, out_features=n_class)
         )
 
     def forward(self, spectrogram, *args, **kwargs):

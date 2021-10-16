@@ -18,7 +18,8 @@
     "args": {
       "n_feats": 128,
       "fc_hidden": 512,
-      "dropout": 0.1
+      "dropout": 0.1,
+      "n_layers": 2
     }
   },
   "data": {
@@ -52,13 +53,13 @@
     {
       "type": "ArgmaxWERMetric",
       "args": {
-        "name": "WER (argmax)"
+        "name": "WER_(argmax)"
       }
     },
     {
       "type": "ArgmaxCERMetric",
       "args": {
-        "name": "CER (argmax)"
+        "name": "CER_(argmax)"
       }
     }
   ],
@@ -77,10 +78,11 @@
     "save_dir": "saved/",
     "save_period": 5,
     "verbosity": 2,
+    "monitor": "min CER_(argmax)",
     "early_stop": 100,
     "visualize": "wandb",
     "wandb_project": "asr_project",
-    "len_epoch": 20,
+    "len_epoch": 30,
     "grad_norm_clip": 10
   }
 }
