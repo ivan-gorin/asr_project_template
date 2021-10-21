@@ -48,9 +48,12 @@ class BaseTrainer:
         self.checkpoint_dir = config.save_dir
 
         # setup visualization writer instance
-        self.writer = get_visualizer(
-            config, self.logger, cfg_trainer["visualize"]
-        )
+        if "visualize" in cfg_trainer:
+            self.writer = get_visualizer(
+                config, self.logger, cfg_trainer["visualize"]
+            )
+        else:
+            self.writer = None
 
         if config.resume is not None:
             self._resume_checkpoint(config.resume)
