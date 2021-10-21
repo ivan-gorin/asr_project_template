@@ -19,12 +19,12 @@
       "n_feats": 128,
       "fc_hidden": 512,
       "dropout": 0.1,
-      "n_layers": 2
+      "n_layers": 6
     }
   },
   "data": {
     "train": {
-      "batch_size": 64,
+      "batch_size": 16,
       "num_workers": 5,
       "datasets": [
         {
@@ -38,7 +38,7 @@
       ]
     },
     "val": {
-      "batch_size": 64,
+      "batch_size": 16,
       "num_workers": 5,
       "datasets": [
         {
@@ -52,7 +52,7 @@
       ]
     },
       "test": {
-        "batch_size": 64,
+        "batch_size": 16,
         "num_workers": 5,
         "datasets": [
           {
@@ -101,12 +101,13 @@
     }
   },
   "trainer": {
-    "epochs": 50,
+    "epochs": 100,
     "save_dir": "saved/",
     "save_period": 5,
     "verbosity": 2,
     "monitor": "min val_WER_(argmax)",
     "early_stop": 100,
+    "len_epoch": 400,
     "visualize": "wandb",
     "wandb_project": "asr_project",
     "grad_norm_clip": 10

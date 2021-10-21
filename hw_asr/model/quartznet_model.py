@@ -75,8 +75,10 @@ class QuartzNetModel(BaseModel):
         self.tail = nn.Conv1d(1024, n_class, kernel_size=1, bias=True)
 
     def forward(self, spectrogram, *args, **kwargs):
+        # print(spectrogram.shape, "SPECTROGRAM")
         out = self.net(spectrogram.transpose(1, 2))
-        return self.tail(out)
+        # print(self.tail(out).shape, 'TAIL')
+        return self.tail(out).transpose(1, 2)
 
     def transform_input_lengths(self, input_lengths):
-        return input_lengths  # we don't reduce time dimension here
+        return input_lengths // 2
