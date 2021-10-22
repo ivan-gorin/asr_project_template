@@ -23,7 +23,7 @@ def conv_bn_layer(in_channels, out_channels, kernel_size, stride=1, padding=0, d
 
 
 class MainBlock(nn.Module):
-    def __init__(self, repeat, in_channels, out_channels, kernel_size, stride=1, dilation=1, groups=1,
+    def __init__(self, repeat, in_channels, out_channels, kernel_size, stride=1, dilation=1, groups=1, dropout=0.2,
                  time_separable=False, residual=False):
         super().__init__()
         self.is_residual = residual
@@ -38,6 +38,7 @@ class MainBlock(nn.Module):
             layers.append(conv_bn_layer(in_channels, out_channels, kernel_size, stride, padding, dilation, groups,
                                         time_separable))
             layers.append(nn.ReLU())
+            layers.append(nn.Dropout(p=dropout))
             in_channels = out_channels
         self.net = nn.Sequential(*layers)
         self.tail = nn.ReLU()
@@ -66,7 +67,9 @@ class QuartzNetModel(BaseModel):
                           kernel_size=block['kernel_size'],
                           stride=block['stride'],
                           dilation=block['dilation'],
-                          groups=groups, time_separable=block['time_separable'],
+                          groups=groups,
+                          dropout=block['dropout'],
+                          time_separable=block['time_separable'],
                           residual=block['residual'])
             )
             n_feats = block['out_channels']
