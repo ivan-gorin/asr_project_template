@@ -38,6 +38,7 @@ class MainBlock(nn.Module):
             layers.append(conv_bn_layer(in_channels, out_channels, kernel_size, stride, padding, dilation, groups,
                                         time_separable))
             layers.append(nn.ReLU())
+            layers.append(nn.Dropout())
             in_channels = out_channels
         self.net = nn.Sequential(*layers)
         self.tail = nn.ReLU()
@@ -76,7 +77,7 @@ class QuartzNetModel(BaseModel):
 
     def forward(self, spectrogram, *args, **kwargs):
         out = self.net(spectrogram.transpose(1, 2))
-        return self.tail(out)
+        return self.tail(out).transpose(1, 2)
 
     def transform_input_lengths(self, input_lengths):
-        return input_lengths  # we don't reduce time dimension here
+        return input_lengths // 2
