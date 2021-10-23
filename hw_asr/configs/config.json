@@ -10,7 +10,13 @@
     }
   },
   "augmentations": {
-    "wave": [],
+    "wave": [
+      {"type": "Gain", "args": {"sample_rate": 16000, "p": 0.1}},
+      {"type": "PitchShift", "args": {"sample_rate": 16000, "p": 0.1}},
+      {"type": "AddBackgroundNoise", "args": {"sample_rate": 16000, "p": 0.1}},
+      {"type": "ApplyImpulseResponse", "args": {"sample_rate": 16000, "p": 0.1}},
+      {"type": "Fade", "args": {"p": 0.1}}
+    ],
     "spectrogram": []
   },
   "arch": {
@@ -19,7 +25,7 @@
       "n_feats": 128,
       "fc_hidden": 512,
       "dropout": 0.1,
-      "n_layers": 6
+      "n_layers": 2
     }
   },
   "data": {
@@ -108,8 +114,7 @@
     "monitor": "min val_WER_(argmax)",
     "early_stop": 100,
     "len_epoch": 400,
-    "visualize": "wandb",
-    "wandb_project": "asr_project",
+    "visualize": "tensorboard",
     "grad_norm_clip": 10
   }
 }

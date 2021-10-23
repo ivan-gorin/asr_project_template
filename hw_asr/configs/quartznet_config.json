@@ -10,7 +10,13 @@
     }
   },
   "augmentations": {
-    "wave": [],
+    "wave": [
+      {"type": "Gain", "args": {"sample_rate": 16000, "p": 0.1}},
+      {"type": "PitchShift", "args": {"sample_rate": 16000, "p": 0.1}},
+      {"type": "AddBackgroundNoise", "args": {"sample_rate": 16000, "p": 0.1}},
+      {"type": "ApplyImpulseResponse", "args": {"sample_rate": 16000, "p": 0.1}},
+      {"type": "Fade", "args": {"p": 0.1}}
+    ],
     "spectrogram": []
   },
   "arch": {
