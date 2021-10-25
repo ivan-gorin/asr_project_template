@@ -134,6 +134,9 @@ class BaseDataset(Dataset):
             logger.info(
                 f"Filtered {_total}({_total / initial_size:.1%}) records  from dataset"
             )
+            logger.info(
+                f"{initial_size-_total} records left in dataset"
+            )
 
         if limit is not None:
             random.seed(42)  # best seed for deep learning

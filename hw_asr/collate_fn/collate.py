@@ -21,10 +21,10 @@ def collate_fn(dataset_items: List[dict]):
                     }
 
     for item in dataset_items:
-        result_batch['text_encoded'].append(item['text_encoded'].squeeze())
+        result_batch['text_encoded'].append(item['text_encoded'].squeeze(0))
         result_batch['text_encoded_length'].append(item['text_encoded'].shape[1])
 
-        result_batch['spectrogram'].append(item['spectrogram'].squeeze().transpose(0, 1))
+        result_batch['spectrogram'].append(item['spectrogram'].squeeze(0).transpose(0, 1))
         result_batch['spectrogram_length'].append(item['spectrogram'].shape[2])
 
         result_batch['text'].append(CharTextEncoder.normalize_text(item['text']))

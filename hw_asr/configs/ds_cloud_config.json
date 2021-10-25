@@ -13,13 +13,13 @@
     "wave": [
       {"type": "Gain", "args": {"sample_rate": 16000, "p": 0.1}},
       {"type": "PitchShift", "args": {"sample_rate": 16000, "p": 0.1}},
-      {"type": "AddBackgroundNoise", "args": {"sample_rate": 16000, "p": 0.1}},
+      {"type": "AddBackgroundNoise", "args": {"sample_rate": 16000, "p": 1}},
       {"type": "ApplyImpulseResponse", "args": {"sample_rate": 16000, "p": 0.1}},
       {"type": "Fade", "args": {"p": 0.1}}
     ],
     "spectrogram": [
-      {"type": "FrequencyMasking", "args": {"p": 0.5}},
-      {"type": "TimeMasking", "args": {"p": 0.5}}
+      {"type": "FrequencyMasking", "args": {"p": 1}},
+      {"type": "TimeMasking", "args": {"p": 1}}
     ]
   },
   "arch": {
@@ -41,14 +41,14 @@
           "args": {
             "part": "train-clean-100",
             "max_audio_length": 20.0,
-            "max_text_length": 250,
+            "max_text_length": 300,
             "data_dir": "/mnt/disks/disk"
           }
         }
       ]
     },
     "val": {
-      "batch_size": 42,
+      "batch_size": 128,
       "num_workers": 4,
       "datasets": [
         {
@@ -104,13 +104,9 @@
     }
   ],
   "lr_scheduler": {
-    "type": "OneCycleLR",
+    "type": "CosineAnnealingLR",
     "args": {
-      "steps_per_epoch": 250,
-      "epochs": 50,
-      "anneal_strategy": "cos",
-      "max_lr": 4e-3,
-      "pct_start": 0.2
+      "T_max": 5000
     }
   },
   "trainer": {
@@ -124,5 +120,9 @@
     "visualize": "wandb",
     "wandb_project": "asr_project",
     "grad_norm_clip": 10
+  },
+  "text_encoder": {
+    "type": "BPEEncoder",
+    "args": {"model_path": "./BPE.model"}
   }
 }

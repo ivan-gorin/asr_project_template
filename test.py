@@ -12,6 +12,7 @@ from hw_asr.text_encoder.ctc_char_text_encoder import CTCCharTextEncoder
 from hw_asr.trainer import Trainer
 from hw_asr.utils import ROOT_PATH
 from hw_asr.utils.parse_config import ConfigParser
+from hw_asr.metric.utils import calc_wer, calc_cer
 
 DEFAULT_CHECKPOINT_PATH = ROOT_PATH / "default_test_model" / "checkpoint.pth"
 
@@ -43,6 +44,10 @@ def main(config, out_file):
 
     results = []
 
+    wer_sum = 0
+    cer_sum = 0
+    count = 0
+
     with torch.no_grad():
         for batch_num, batch in enumerate(tqdm(dataloaders["test"])):
             batch = Trainer.move_batch_to_device(batch, device)
@@ -60,15 +65,26 @@ def main(config, out_file):
             for i in range(len(batch["text"])):
                 argmax = batch["argmax"][i]
                 argmax = argmax[:int(batch["log_probs_length"][i])]
+                beam_search_res = text_encoder.ctc_beam_search(
+                            batch["probs"][i], batch["log_probs_length"][i], beam_size=100
+                        )[:10]
+
                 results.append(
                     {
                         "ground_trurh": batch["text"][i],
                         "pred_text_argmax": text_encoder.ctc_decode(argmax),
-                        "pred_text_beam_search": text_encoder.ctc_beam_search(
-                            batch["probs"][i], batch["log_probs_length"][i], beam_size=30
-                        )[:10],
+                        "pred_text_beam_search": beam_search_res,
+                        "WER": calc_wer(batch["text"][i], beam_search_res[0][0]),
+                        "CER": calc_cer(batch["text"][i], beam_search_res[0][0]),
                     }
                 )
+                wer_sum += results[-1]["WER"]
+                cer_sum += results[-1]["CER"]
+                count += 1
+
+    print(f"Average WER: {wer_sum / count}")
+    print(f"Average CER: {cer_sum / count}")
+
     with Path(out_file).open("w") as f:
         json.dump(results, f, indent=2)
 

@@ -48,5 +48,5 @@ class CharTextEncoder(BaseTextEncoder):
         return a
 
     @classmethod
-    def get_simple_alphabet(cls):
+    def get_simple_alphabet(cls, args):
         return cls(alphabet=list(ascii_lowercase + ' '))
