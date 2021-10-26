@@ -1,6 +1,6 @@
-# ASR project barebones
+# ASR project
 
-## Installation guide
+## Установка
 
 Перед запуском установите зависимости.
 
