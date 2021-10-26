@@ -1,0 +1,115 @@
+{
+  "name": "DeepSpeechCloudModel2",
+  "n_gpu": 1,
+  "preprocessing": {
+    "sr": 16000,
+    "spectrogram": {
+      "type": "MelSpectrogram",
+      "args": {
+      }
+    }
+  },
+  "augmentations": {
+    "wave": [],
+    "spectrogram": [
+      {"type": "FrequencyMasking", "args": {"p": 1}},
+      {"type": "TimeMasking", "args": {"p": 1}}
+    ]
+  },
+  "arch": {
+    "type": "DeepSpeechModel2",
+    "args": {
+      "rnn_dim": 512,
+      "n_feats": 128
+    }
+  },
+  "data": {
+    "train": {
+      "batch_size": 42,
+      "num_workers": 4,
+      "datasets": [
+        {
+          "type": "LibrispeechDataset",
+          "args": {
+            "part": "train-clean-100",
+            "max_audio_length": 20.0,
+            "max_text_length": 300,
+            "data_dir": "/mnt/disks/disk"
+          }
+        }
+      ]
+    },
+    "val": {
+      "batch_size": 128,
+      "num_workers": 4,
+      "datasets": [
+        {
+          "type": "LibrispeechDataset",
+          "args": {
+            "part": "dev-clean",
+            "max_audio_length": 20.0,
+            "max_text_length": 200,
+            "data_dir": "/mnt/disks/disk"
+          }
+        }
+      ]
+    },
+      "test": {
+        "batch_size": 8,
+        "num_workers": 4,
+        "datasets": [
+          {
+            "type": "LibrispeechDataset",
+            "args": {
+                "part": "test-clean",
+                "max_audio_length": 20.0,
+                "max_text_length": 200,
+            "data_dir": "/mnt/disks/disk"
+            }
+          }
+        ]
+      }
+  },
+  "optimizer": {
+    "type": "Adam",
+    "args": {
+      "lr": 3e-4
+    }
+  },
+  "loss": {
+    "type": "CTCLoss",
+    "args": {}
+  },
+  "metrics": [
+    {
+      "type": "ArgmaxWERMetric",
+      "args": {
+        "name": "WER_(argmax)"
+      }
+    },
+    {
+      "type": "ArgmaxCERMetric",
+      "args": {
+        "name": "CER_(argmax)"
+      }
+    }
+  ],
+  "lr_scheduler": {
+    "type": "CosineAnnealingLR",
+    "args": {
+      "T_max": 5000
+    }
+  },
+  "trainer": {
+    "epochs": 50,
+    "save_dir": "saved/",
+    "save_period": 5,
+    "verbosity": 2,
+    "monitor": "min val_WER_(argmax)",
+    "early_stop": 100,
+    "len_epoch": 100,
+    "visualize": "wandb",
+    "wandb_project": "asr_project",
+    "grad_norm_clip": 10
+  }
+}

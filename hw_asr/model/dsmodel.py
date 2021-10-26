@@ -67,7 +67,7 @@ class DeepSpeechModel(BaseModel):
     def __init__(self, n_cnn_layers, n_rnn_layers, rnn_dim, n_class, n_feats, stride=2, kernel_size=3, dropout=0.1):
         super(DeepSpeechModel, self).__init__(n_feats, n_class)
         n_feats = n_feats // 2
-        self.cnn = nn.Conv2d(1, 32, kernel_size=3, stride=stride, padding=kernel_size // stride)
+        self.cnn = nn.Conv2d(1, 32, kernel_size=3, stride=stride, padding=kernel_size // 2)
 
         layers = []
         for _ in range(n_cnn_layers):
