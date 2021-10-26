@@ -9,6 +9,7 @@ from tqdm import tqdm
 import hw_asr.model as module_model
 from hw_asr.datasets.utils import get_dataloaders
 from hw_asr.text_encoder.ctc_char_text_encoder import CTCCharTextEncoder
+import hw_asr.text_encoder
 from hw_asr.trainer import Trainer
 from hw_asr.utils import ROOT_PATH
 from hw_asr.utils.parse_config import ConfigParser
@@ -21,7 +22,11 @@ def main(config, out_file):
     logger = config.get_logger("test")
 
     # text_encoder
-    text_encoder = CTCCharTextEncoder.get_simple_alphabet()
+    if "text_encoder" in config:
+        text_encoder = getattr(hw_asr.text_encoder, config["text_encoder"]["type"]).get_simple_alphabet(
+            config["text_encoder"]["args"])
+    else:
+        text_encoder = CTCCharTextEncoder.get_simple_alphabet(None)
 
     # setup data_loader instances
     dataloaders = get_dataloaders(config, text_encoder)
@@ -61,14 +66,12 @@ def main(config, out_file):
                 batch["spectrogram_length"]
             )
             batch["probs"] = batch["log_probs"].exp().cpu()
+            beam_search_batch = text_encoder.batch_ctc_beam_search(batch["probs"], beam_size=100)
             batch["argmax"] = batch["probs"].argmax(-1)
             for i in range(len(batch["text"])):
                 argmax = batch["argmax"][i]
                 argmax = argmax[:int(batch["log_probs_length"][i])]
-                beam_search_res = text_encoder.ctc_beam_search(
-                            batch["probs"][i], batch["log_probs_length"][i], beam_size=100
-                        )[:10]
-
+                beam_search_res = beam_search_batch[i][:10]
                 results.append(
                     {
                         "ground_trurh": batch["text"][i],

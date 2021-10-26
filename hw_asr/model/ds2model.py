@@ -19,21 +19,6 @@ class CNNBlock(nn.Module):
         x = self.net(x)
         return x  # (batch, channel, feature, time)
 
-
-# class BidirectionalGRU(nn.Module):
-#     def __init__(self, rnn_dim, hidden_size, dropout, activation, batch_first=True):
-#         super().__init__()
-#         self.BiGRU = nn.GRU(input_size=rnn_dim, hidden_size=hidden_size, num_layers=1, batch_first=batch_first, bidirectional=True)
-#         self.activation = activation()
-#         self.dropout = nn.Dropout(dropout)
-#
-#     def forward(self, x):
-#         x, _ = self.BiGRU(x)
-#         x = self.activation(x)
-#         x = self.dropout(x)
-#         return x
-
-
 class DeepSpeechModel2(BaseModel):
     def __init__(self, rnn_dim, n_class, n_feats, dropout=0.1, activation='ReLU'):
         super(DeepSpeechModel2, self).__init__(n_feats, n_class)
@@ -48,11 +33,6 @@ class DeepSpeechModel2(BaseModel):
             CNNBlock(1, 32, kernel=(11, 41), stride=(2, 2), dropout=dropout, n_feats=32, activation=activate_fn),
             CNNBlock(32, 32, kernel=(11, 21), stride=(2, 1), dropout=dropout, n_feats=32, activation=activate_fn)
         ])
-
-        # layers = [BidirectionalGRU(rnn_dim=32*(n_feats//4), hidden_size=rnn_dim, dropout=dropout, activation=activate_fn)]
-        # for _ in range(4):
-        #     layers.append(BidirectionalGRU(rnn_dim=rnn_dim*2, hidden_size=rnn_dim, dropout=dropout, activation=activate_fn))
-        # self.rnn_net = nn.Sequential(*layers)
 
         self.rnn_net = nn.GRU(input_size=32 * (n_feats // 4), hidden_size=rnn_dim, dropout=dropout, num_layers=5,
                               bidirectional=True, batch_first=True)

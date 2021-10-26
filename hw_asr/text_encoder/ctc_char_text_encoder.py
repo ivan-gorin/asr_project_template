@@ -44,4 +44,18 @@ class CTCCharTextEncoder(CharTextEncoder):
                           1/torch.exp(beam_scores[0][i]).item()))
 
         return hypos
-        # return sorted(hypos, key=lambda x: x[1], reverse=True)
+
+    def batch_ctc_beam_search(self, probs: torch.tensor, beam_size: int = 100) -> List[List[Tuple[str, float]]]:
+        assert len(probs.shape) == 3
+        batch_size, char_length, voc_size = probs.shape
+        assert voc_size == len(self.ind2char)
+        decoder = CTCBeamDecoder(list(self.ind2char.values()), beam_width=beam_size)
+        beam_results, beam_scores, _, out_lens = decoder.decode(probs)
+        hypos = []
+        for batch in range(batch_size):
+            hypos.append([])
+            for i in range(beam_size):
+                hypos[-1].append((self.ctc_decode(beam_results[batch][i][:out_lens[batch][i]].tolist()),
+                                  1 / torch.exp(beam_scores[0][i]).item()))
+
+        return hypos

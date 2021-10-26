@@ -1,12 +1,14 @@
-from typing import List
+from typing import List, Tuple
 from itertools import groupby
 from torch import Tensor
+import torch
+from ctcdecode import CTCBeamDecoder
 import youtokentome
 
-from hw_asr.text_encoder.char_text_encoder import CharTextEncoder
+from hw_asr.text_encoder.ctc_char_text_encoder import CTCCharTextEncoder
 
 
-class BPEEncoder(CharTextEncoder):
+class BPEEncoder(CTCCharTextEncoder):
     EMPTY_TOK = "<PAD>"
 
     def __init__(self, alphabet: List[str], model):
