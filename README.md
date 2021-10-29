@@ -29,6 +29,19 @@ cd ctcdecode && pip install .
 Финальный чекпоинт на гугл диске, доступен для скачивания:
 [Финальный чекпоинт](https://drive.google.com/file/d/18uTy3yI6nr79_-Cdzg-uByn7Yo3EiseT/view?usp=sharing)
 
+## Запуск теста
+
+1. Скачать [финальный чекпоинт](https://drive.google.com/file/d/18uTy3yI6nr79_-Cdzg-uByn7Yo3EiseT/view?usp=sharing)
+и переместить его в корневую директорию проекта.
+2. Скопировать конфиг файл ds_config.json из `hw_asr/configs` в корневую директорию проекта (рядом с чекпоинтом):
+  ```
+  cp ./hw_asr/configs/ds_config.json config.json
+  ```
+3. Запустить тест:
+  ```
+  python test.py --config config.json --resume model_best.pth --output testout.json
+  ```
+
 ## Репорты с данными каждого запуска
 
 Также есть репорты со всеми логированными данными каждого из запусков:
